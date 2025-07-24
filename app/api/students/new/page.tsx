@@ -3,6 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { Phone, User, Hash, Home, StickyNote, CalendarDays } from "lucide-react";
 
 export default function StudentForm() {
   const [formData, setFormData] = useState({
@@ -56,21 +57,109 @@ export default function StudentForm() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-md mx-auto mt-10 flex flex-col gap-4 p-4 border rounded shadow"
-    >
-      <input name="name" placeholder="Name" className="input" value={formData.name} onChange={handleChange} />
-      <input name="registerNo" placeholder="Register No" className="input" value={formData.registerNo} onChange={handleChange} />
-      <input name="roomNumber" placeholder="Room Number" className="input" value={formData.roomNumber} onChange={handleChange} />
-      <textarea name="reason" placeholder="Reason" className="input" value={formData.reason} onChange={handleChange} />
-      <input name="village" placeholder="Village" className="input" value={formData.village} onChange={handleChange} />
-      <input name="phoneNumber" placeholder="Phone Number" className="input" value={formData.phoneNumber} onChange={handleChange} />
-      <input name="days" placeholder="Days" className="input" value={formData.days} onChange={handleChange} />
-      
-      <button type="submit" className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-        Submit
-      </button>
-    </form>
+
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#141e30] to-[#243b55] p-6">
+      <form
+        onSubmit={handleSubmit}
+        className="w-full max-w-md bg-white/20 backdrop-blur-md text-white border border-white/30 rounded-2xl shadow-xl p-8 space-y-5"
+      >
+        <h2 className="text-3xl font-bold text-center mb-4">Outpass Form</h2>
+    
+        {/* Name */}
+        <div className="relative">
+          <User className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
+          <input
+            name="name"
+            placeholder="Name"
+            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
+            value={formData.name}
+            onChange={handleChange}
+          />
+        </div>
+    
+        {/* Register No */}
+        <div className="relative">
+          <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
+          <input
+            name="registerNo"
+            placeholder="Register No"
+            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
+            value={formData.registerNo}
+            onChange={handleChange}
+          />
+        </div>
+    
+        {/* Room Number */}
+        <div className="relative">
+          <Home className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
+          <input
+            name="roomNumber"
+            placeholder="Room Number"
+            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
+            value={formData.roomNumber}
+            onChange={handleChange}
+          />
+        </div>
+    
+        {/* Reason */}
+        <div className="relative">
+          <StickyNote className="absolute left-3 top-4 text-white/70" size={20} />
+          <textarea
+            name="reason"
+            placeholder="Reason"
+            rows={3}
+            className="w-full pl-10 pr-4 pt-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80 resize-none"
+            value={formData.reason}
+            onChange={handleChange}
+          />
+        </div>
+    
+        {/* Village */}
+        <div className="relative">
+          <Home className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
+          <input
+            name="village"
+            placeholder="Village"
+            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
+            value={formData.village}
+            onChange={handleChange}
+          />
+        </div>
+    
+        {/* Phone Number */}
+        <div className="relative">
+          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
+          <input
+            type="tel"
+            name="phoneNumber"
+            placeholder="Phone Number"
+            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+          />
+        </div>
+    
+        {/* Days */}
+        <div className="relative">
+          <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
+          <input
+            name="days"
+            placeholder="Days"
+            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
+            value={formData.days}
+            onChange={handleChange}
+          />
+        </div>
+    
+        <button
+          type="submit"
+          className="w-full py-2 bg-blue-600 hover:bg-blue-700 transition rounded-lg font-semibold"
+        >
+          Submit
+        </button>
+      </form>
+    </div>
+    
+  
   );
 }
