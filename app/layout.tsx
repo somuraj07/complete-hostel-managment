@@ -32,8 +32,8 @@ export default function RootLayout({
       >
         <Navbar />
         <Toaster position="top-right" />
-        <main>
-          {children}
+        <main className="mt-[72px] px-4 pb-6">
+        {children}
         </main>
         <Footer />
       </body>

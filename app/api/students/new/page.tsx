@@ -49,7 +49,7 @@ export default function StudentForm() {
         returned: false,
       });
     } catch (error: any) {
-      console.error("❌ Error:", error);
+      console.error(" Error:", error);
       toast.error(error?.response?.data?.message || "Something went wrong!", {
         id: loadingToast,
       });

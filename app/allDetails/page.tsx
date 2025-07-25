@@ -140,8 +140,17 @@ export default function AllDetailsPage() {
                 <td className="px-4 py-2">{student.village}</td>
                 <td className="px-4 py-2">{student.phoneNumber}</td>
                 <td className="px-4 py-2">{student.days}</td>
-                <td className="px-4 py-2">{student.submit ? "YES" : "NO"}</td>
-                <td className="px-4 py-2">{student.returned ? "YES" : "NO"}</td>
+                <td className="px-4 py-2">
+                <span className={student.submit ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
+                     {student.submit ? "YES" : "NO"}
+                </span>
+                </td>
+                <td className="px-4 py-2">
+                <span className={student.returned ? "text-green-600 font-semibold" : "text-red-600 font-semibold"}>
+                {student.returned ? "YES" : "NO"}
+                 </span>
+                 </td>
+
                 <td className="px-4 py-2">{student.approvedBy}</td>
                 <td className="px-4 py-2">
                   {new Date(student.comeoutTime).toLocaleString()}
