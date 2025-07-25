@@ -14,6 +14,9 @@ export default function Home() {
   const watchmenHandler = ()=>{
     router.push('/login')
   }
+  const AdminHandler = ()=>{
+    router.push('/allDetails')
+  }
   
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
@@ -40,6 +43,12 @@ export default function Home() {
           className="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-xl transition duration-200"
         >
           Watchman Login
+        </button>
+        <button
+          onClick={AdminHandler}
+          className="bg-orange-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-xl transition duration-200"
+        >
+          Admin Login
         </button>
       </div>
     </div>

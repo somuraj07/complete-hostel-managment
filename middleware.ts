@@ -13,10 +13,13 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/watchman') && role !== 'watchman') {
     return NextResponse.redirect(new URL('/login', req.url));
   }
+  if (pathname.startsWith('/allDetails') && role !== 'chairman' && role!=='warden') {
+    return NextResponse.redirect(new URL('/login', req.url));
+  }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/warden/:path*', '/watchman/:path*'],
+  matcher: ['/warden/:path*', '/watchman/:path*','/allDetails/:path*'],
 };
