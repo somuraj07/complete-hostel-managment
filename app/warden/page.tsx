@@ -15,6 +15,7 @@ type Student = {
   reason: string;
   phoneNumber: string;
   submit: boolean;
+  photo: string;
 };
 
 export default function WardenPage() {
@@ -107,103 +108,126 @@ export default function WardenPage() {
     }
   };
 
-  if (loading) return <div className="p-6">Loading…</div>;
+  if (loading) return <div className="p-6 text-center text-black">Loading…</div>;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-[#872e0e]">Warden Dashboard</h1>
-        <div className="flex items-center gap-4 relative">
+    <div className="min-h-screen bg-gradient-to-b from-white to-[#f9843d] flex flex-col items-center p-4 pt-6 text-black">
+      {/* Header */}
+      <div className="w-full flex justify-between items-center mb-4">
+        <h1 className="text-xl font-bold text-black">Warden Dashboard</h1>
+        <div className="flex items-center gap-2">
+          {/* Red Notification Button */}
           <button
             onClick={() => setSlideOpen(!slideOpen)}
-            className="relative text-white bg-red-600 hover:bg-red-700 p-2 rounded-full shadow"
+            className="relative text-white bg-red-600 hover:bg-red-700 p-2 rounded-full"
           >
-            <Bell className="w-6 h-6" />
+            <Bell className="w-5 h-5" />
             {notifications.length > 0 && (
-              <span className="absolute -top-1 -right-1 bg-yellow-400 text-black text-xs font-bold px-2 rounded-full">
+              <span className="absolute -top-1 -right-1 bg-white text-red-600 text-xs font-bold px-1.5 rounded-full">
                 {notifications.length}
               </span>
             )}
           </button>
+
+          {/* Green All Details Button */}
           <button
             onClick={detailsHandler}
-            className="bg-[#872e0e] hover:bg-[#9a3310] text-white font-medium px-4 py-2 rounded-md shadow"
+            className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md"
           >
             All Details
           </button>
         </div>
       </div>
 
-      {slideOpen && (
-          <div className="fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-40 border-l p-4 overflow-y-auto mt-16">
-
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-lg font-semibold">New Applications</h2>
-            <button onClick={() => setSlideOpen(false)} className="text-sm">Close</button>
-          </div>
+      {/* Notification Slide Panel */}
+      <div
+        className={clsx(
+          "fixed top-0 right-0 h-full w-72 bg-white text-black z-50 shadow-lg transition-transform duration-300 border-l border-gray-200",
+          slideOpen ? "translate-x-0" : "translate-x-full"
+        )}
+      >
+        <div className="flex justify-between items-center p-4 border-b">
+          <h2 className="text-md font-semibold text-red-600">Notifications</h2>
+          <button
+            onClick={() => setSlideOpen(false)}
+            className="text-sm text-gray-600"
+          >
+            Close
+          </button>
+        </div>
+        <div className="p-4 space-y-3 overflow-y-auto">
           {notifications.length > 0 ? (
-            <ul className="space-y-3">
-              {notifications.map((n) => (
-                <li
-                  key={n.id}
-                  className="p-3 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer"
-                  onClick={() => {
-                    jumpToStudent(n.id);
-                    setSlideOpen(false);
-                  }}
-                >
-                  <p className="font-medium">{n.name}</p>
-                  <p className="text-xs text-gray-600">Reg: {n.registerNo}</p>
-                </li>
-              ))}
-            </ul>
+            notifications.map((n) => (
+              <div
+                key={n.id}
+                className="p-3 bg-red-50 rounded shadow-sm hover:bg-red-100 cursor-pointer"
+                onClick={() => {
+                  jumpToStudent(n.id);
+                  setSlideOpen(false);
+                }}
+              >
+                <p className="font-medium">{n.name}</p>
+                <p className="text-xs text-gray-700">Reg: {n.registerNo}</p>
+              </div>
+            ))
           ) : (
-            <p className="text-gray-500 text-sm">No new applications</p>
+            <p className="text-sm text-gray-500">No new applications</p>
           )}
         </div>
-      )}
+      </div>
 
-      <div
-        ref={tableRef}
-        className="overflow-x-auto rounded-lg shadow border border-gray-200 mt-4"
-      >
-        <table className="min-w-full bg-white text-sm text-gray-800">
-          <thead className="bg-[#f7f3f2] text-[#872e0e] text-left font-semibold">
+      {/* Table Section */}
+      <div className="w-full overflow-x-auto mt-2">
+        <table className="w-full text-sm border border-gray-200 rounded-xl overflow-hidden text-black">
+          <thead className="bg-[#f9843d] text-white">
             <tr>
-              <th className="px-4 py-3 border-b">Name</th>
-              <th className="px-4 py-3 border-b">Register No</th>
-              <th className="px-4 py-3 border-b">Room No</th>
-              <th className="px-4 py-3 border-b">Reason</th>
-              <th className="px-4 py-3 border-b">Phone</th>
-              <th className="px-4 py-3 border-b text-center">Submit</th>
+              <th className="px-3 py-2">Photo</th>
+              <th className="px-3 py-2">Name</th>
+              <th className="px-3 py-2">Reg No</th>
+              <th className="px-3 py-2">Room</th>
+              <th className="px-3 py-2">Reason</th>
+              <th className="px-3 py-2">Phone</th>
+              <th className="px-3 py-2">Submit</th>
             </tr>
           </thead>
           <tbody>
-            {students.map((s) => (
+            {students.map((s, i) => (
               <tr
                 key={s.id}
                 id={`row-${s.id}`}
                 className={clsx(
-                  "border-b hover:bg-gray-50 transition-colors",
+                  "text-center",
+                  i % 2 === 0 ? "bg-white" : "bg-gray-50",
                   highlightedId === s.id && "bg-yellow-100"
                 )}
               >
-                <td className="px-4 py-3">{s.name}</td>
-                <td className="px-4 py-3">{s.registerNo}</td>
-                <td className="px-4 py-3">{s.roomNumber}</td>
-                <td className="px-4 py-3">{s.reason}</td>
-                <td className="px-4 py-3">{s.phoneNumber}</td>
-                <td className="px-4 py-3 text-center">
+                <td className="py-2">
+                  {s.photo ? (
+                    <img
+                      src={s.photo}
+                      className="w-10 h-10 rounded-full object-cover border"
+                      alt={s.name}
+                    />
+                  ) : (
+                    <span className="text-gray-400 italic">No Photo</span>
+                  )}
+                </td>
+                <td className="px-2 py-2">{s.name}</td>
+                <td className="px-2 py-2">{s.registerNo}</td>
+                <td className="px-2 py-2">{s.roomNumber}</td>
+                <td className="px-2 py-2">{s.reason}</td>
+                <td className="px-2 py-2">{s.phoneNumber}</td>
+                <td className="px-2 py-2">
                   {s.submit ? (
-                    <span className="text-green-600 font-medium bg-green-100 px-3 py-1 rounded-full">
+                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
                       Submitted
                     </span>
                   ) : (
                     <button
                       onClick={() => handleSubmit(s.id)}
-                      className="bg-red-600 hover:bg-green-600 text-white px-4 py-1.5 rounded-md font-medium shadow-sm"
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded-md text-xs"
                     >
-                       Submit
+                      Submit
                     </button>
                   )}
                 </td>
@@ -211,7 +235,7 @@ export default function WardenPage() {
             ))}
             {students.length === 0 && (
               <tr>
-                <td colSpan={6} className="text-center text-gray-500 py-6 italic">
+                <td colSpan={7} className="text-center text-gray-500 py-6 italic">
                   No records
                 </td>
               </tr>

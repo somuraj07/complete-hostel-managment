@@ -16,7 +16,8 @@ export async function POST(request: NextRequest) {
         days: body.days,
         approvedBy: "Warden",
         submit: body.submit,
-        returned: body.returned
+        returned: body.returned,
+        photo:body.photo,
       },
     });
 

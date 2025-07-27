@@ -1,11 +1,15 @@
 "use client";
-
-import { useState } from "react";
-import axios from "axios";
+import { useRef, useState } from "react";
+import Webcam from "react-webcam";
 import toast from "react-hot-toast";
-import { Phone, User, Hash, Home, StickyNote, CalendarDays } from "lucide-react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function StudentForm() {
+  const router = useRouter();
+  const webcamRef = useRef<Webcam>(null);
+  const [showCamera, setShowCamera] = useState(true);
+
   const [formData, setFormData] = useState({
     name: "",
     registerNo: "",
@@ -14,152 +18,129 @@ export default function StudentForm() {
     village: "",
     phoneNumber: "",
     days: "",
-    submit: false,     // hidden from UI, but still sent as false
-    returned: false,   // hidden from UI, but still sent as false
+    photo: "",
   });
-  // acces the values from inputs  
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const target = e.target as HTMLInputElement;
-    const { name, value } = target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+  const handleCapture = () => {
+    const imageSrc = webcamRef.current?.getScreenshot();
+    if (imageSrc) {
+      setFormData((prev) => ({ ...prev, photo: imageSrc }));
+      setShowCamera(false);
+    }
   };
-// handle the submit of the form
-  // submit the form data to the api  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const loadingToast = toast.loading("Submitting...");
+    const isEmpty = Object.values(formData).some((val) => val.trim() === "");
+    if (isEmpty) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
 
     try {
-      await axios.post("/api/students", formData);
-      toast.success("Form submitted successfully!", { id: loadingToast });
-      setFormData({
-        name: "",
-        registerNo: "",
-        roomNumber: "",
-        reason: "",
-        village: "",
-        phoneNumber: "",
-        days: "",
-        submit: false,
-        returned: false,
-      });
-    } catch (error: any) {
-      console.error(" Error:", error);
-      toast.error(error?.response?.data?.message || "Something went wrong!", {
-        id: loadingToast,
-      });
+      const res = await axios.post("/api/students/new", formData);
+      if (res.status === 200) {
+        toast.success("Outpass submitted!");
+        router.push("/profile");
+      }
+    } catch (error) {
+      toast.error("Error submitting form.");
     }
   };
 
   return (
-
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#141e30] to-[#243b55] p-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-white to-[#f9843d] p-6">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-md bg-white/20 backdrop-blur-md text-white border border-white/30 rounded-2xl shadow-xl p-8 space-y-5"
+        className="w-full max-w-md bg-white text-[#3d2a1d] border border-orange-200 rounded-2xl shadow-xl p-8 space-y-5"
       >
-        <h2 className="text-3xl font-bold text-center mb-4">Outpass Form</h2>
-    
-        {/* Name */}
-        <div className="relative">
-          <User className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
-          <input
-            name="name"
-            placeholder="Name"
-            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
-            value={formData.name}
-            onChange={handleChange}
-          />
+        <h2 className="text-3xl font-bold text-center text-[#f9843d]">
+          Outpass Request
+        </h2>
+        <p className="text-sm text-center text-gray-600">
+          Please fill out the form to request your outpass
+        </p>
+
+        {/* Camera Section */}
+        <div className="text-center space-y-2">
+          <p className="font-semibold">Capture Your Photo</p>
+          <p className="text-xs text-gray-500">Used for verification</p>
+
+          {formData.photo ? (
+            <>
+              <img
+                src={formData.photo}
+                alt="Captured"
+                className="w-32 h-32 mx-auto rounded-full border border-orange-200 object-cover"
+              />
+              <button
+                type="button"
+                className="mt-2 bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-4 rounded"
+                onClick={() => {
+                  setFormData({ ...formData, photo: "" });
+                  setShowCamera(true);
+                }}
+              >
+                Retake Photo
+              </button>
+            </>
+          ) : showCamera ? (
+            <div className="space-y-2">
+              <div className="overflow-hidden rounded-full w-32 h-32 mx-auto border-4 border-[#f9843d]">
+                <Webcam
+                  ref={webcamRef}
+                  screenshotFormat="image/jpeg"
+                  className="w-full h-full object-cover"
+                  videoConstraints={{ facingMode: "user" }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleCapture}
+                className="bg-[#f9843d] hover:bg-[#e77428] text-white px-4 py-2 rounded shadow"
+              >
+                Capture Photo
+              </button>
+            </div>
+          ) : null}
         </div>
-    
-        {/* Register No */}
-        <div className="relative">
-          <Hash className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
-          <input
-            name="registerNo"
-            placeholder="Register No"
-            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
-            value={formData.registerNo}
-            onChange={handleChange}
-          />
+
+        {/* Input Fields */}
+        <div className="space-y-3">
+          {[
+            { name: "name", label: "Name" },
+            { name: "registerNo", label: "Register Number" },
+            { name: "roomNumber", label: "Room Number" },
+            { name: "reason", label: "Reason for Outpass" },
+            { name: "village", label: "Home Village/Town" },
+            { name: "phoneNumber", label: "Phone Number" },
+            { name: "days", label: "No. of Days" },
+          ].map((field) => (
+            <div key={field.name}>
+              <label className="block text-sm font-semibold mb-1">
+                {field.label}
+              </label>
+              <input
+                type="text"
+                name={field.name}
+                value={(formData as any)[field.name]}
+                onChange={(e) =>
+                  setFormData({ ...formData, [field.name]: e.target.value })
+                }
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f9843d]"
+              />
+            </div>
+          ))}
         </div>
-    
-        {/* Room Number */}
-        <div className="relative">
-          <Home className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
-          <input
-            name="roomNumber"
-            placeholder="Room Number"
-            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
-            value={formData.roomNumber}
-            onChange={handleChange}
-          />
-        </div>
-    
-        {/* Reason */}
-        <div className="relative">
-          <StickyNote className="absolute left-3 top-4 text-white/70" size={20} />
-          <textarea
-            name="reason"
-            placeholder="Reason"
-            rows={3}
-            className="w-full pl-10 pr-4 pt-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80 resize-none"
-            value={formData.reason}
-            onChange={handleChange}
-          />
-        </div>
-    
-        {/* Village */}
-        <div className="relative">
-          <Home className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
-          <input
-            name="village"
-            placeholder="Village"
-            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
-            value={formData.village}
-            onChange={handleChange}
-          />
-        </div>
-    
-        {/* Phone Number */}
-        <div className="relative">
-          <Phone className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
-          <input
-            type="tel"
-            name="phoneNumber"
-            placeholder="Phone Number"
-            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
-            value={formData.phoneNumber}
-            onChange={handleChange}
-          />
-        </div>
-    
-        {/* Days */}
-        <div className="relative">
-          <CalendarDays className="absolute left-3 top-1/2 -translate-y-1/2 text-white/70" size={20} />
-          <input
-            name="days"
-            placeholder="Days"
-            className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 placeholder-white/80"
-            value={formData.days}
-            onChange={handleChange}
-          />
-        </div>
-    
+
+        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full py-2 bg-blue-600 hover:bg-blue-700 transition rounded-lg font-semibold"
+          className="w-full bg-[#f9843d] hover:bg-[#e77428] text-white font-semibold py-2 rounded-xl shadow-md transition"
         >
-          Submit
+          Submit Outpass
         </button>
       </form>
     </div>
-    
-  
   );
 }

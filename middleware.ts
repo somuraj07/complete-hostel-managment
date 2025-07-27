@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 export function middleware(req: NextRequest) {
-  const role = req.cookies.get('adminRole')?.value;
+  const role = req.cookies.get('adminRole')?.value || req.cookies.get('adminRole');
   const { pathname } = req.nextUrl;
 
   // Protect /warden route
@@ -13,7 +13,9 @@ export function middleware(req: NextRequest) {
   if (pathname.startsWith('/watchman') && role !== 'watchman') {
     return NextResponse.redirect(new URL('/login', req.url));
   }
-  if (pathname.startsWith('/allDetails') && role !== 'chairman' && role!=='warden') {
+
+  // Protect /allDetails route - allow only warden and chairman
+  if (pathname.startsWith('/allDetails') && role !== 'warden' && role !== 'chairman') {
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
@@ -21,5 +23,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/warden/:path*', '/watchman/:path*','/allDetails/:path*'],
+  matcher: ['/warden/:path*', '/watchman/:path*', '/allDetails/:path*'],
 };

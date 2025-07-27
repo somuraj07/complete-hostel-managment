@@ -22,6 +22,7 @@ model Student {
   reason      String
   village     String
   phoneNumber String
+  photo       String
   approvedBy  String
   submit      Boolean  @default(false)
   returned    Boolean  @default(false)
@@ -30,4 +31,5 @@ model Student {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   days        String
+
 }

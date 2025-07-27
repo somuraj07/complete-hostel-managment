@@ -12,6 +12,7 @@ interface Student {
   returned: boolean;
   comeoutTime: string | null;
   comeinTime: string | null;
+  photo: string; // From Prisma
 }
 
 export default function WatchmanPage() {
@@ -59,39 +60,48 @@ export default function WatchmanPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-10 px-4">
-      <h1 className="text-3xl font-bold text-center mb-8 text-[#9a3310]">
+    <div className="min-h-screen bg-gradient-to-b from-white to-orange-100 py-6 px-4 text-black">
+      <h1 className="text-2xl font-bold text-center mb-6 text-[#9a3310]">
         Watchman Panel
       </h1>
 
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="space-y-4 max-w-md mx-auto">
         {students.length === 0 && (
-          <p className="text-center text-gray-500">No students to display</p>
+          <p className="text-center text-gray-600">No students to display</p>
         )}
 
         {students.map((student) => (
           <div
             key={student.id}
-            className="bg-white shadow-md rounded-xl p-6 flex items-center justify-between"
+            className="bg-white shadow-md rounded-2xl p-4 flex items-center gap-4"
           >
-            <div>
-              <p className="text-lg font-semibold text-[#872e0e]">{student.name}</p>
-              <p className="text-gray-600 text-sm">{student.registerNo}</p>
-            </div>
+            {/* Photo on left */}
+            <img
+              src={student.photo || "/default-profile.png"}
+              alt={student.name}
+              className="w-20 h-20 rounded-full object-cover border border-gray-300"
+            />
 
-            <div className="space-x-3">
-              <button
-                onClick={() => handleOut(student.id)}
-                className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
-              >
-                Out
-              </button>
-              <button
-                onClick={() => handleReturn(student.id)}
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded"
-              >
-                Return
-              </button>
+            {/* Info and Buttons in row */}
+            <div className="flex flex-col flex-1">
+              <div className="mb-2">
+                <p className="text-lg font-semibold text-[#872e0e]">{student.name}</p>
+                <p className="text-gray-600 text-sm">{student.registerNo}</p>
+              </div>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleOut(student.id)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded text-sm"
+                >
+                  Out
+                </button>
+                <button
+                  onClick={() => handleReturn(student.id)}
+                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded text-sm"
+                >
+                  Return
+                </button>
+              </div>
             </div>
           </div>
         ))}
