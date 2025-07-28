@@ -1,11 +1,11 @@
 import { prisma } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-// PUT – Only updates `submit`
+// PUT – Only updates `submit` value
 export async function PUT(request: NextRequest) {
   try {
     const url = new URL(request.url);
-    const id = url.pathname.split("/").pop(); // get ID from /api/students/[id]
+    const id = url.pathname.split("/").pop(); // Extract ID from the URL
 
     if (!id) {
       return NextResponse.json({ message: "ID not found in URL" }, { status: 400 });
@@ -29,11 +29,11 @@ export async function PUT(request: NextRequest) {
   }
 }
 
-// PATCH – For updating comeoutTime, comeinTime, returned
+// PATCH – Updates comeoutTime, comeinTime, and returned
 export async function PATCH(request: NextRequest) {
   try {
     const url = new URL(request.url);
-    const id = url.pathname.split("/").pop(); // extract ID
+    const id = url.pathname.split("/").pop(); // Extract ID from the URL
 
     if (!id) {
       return NextResponse.json({ message: "ID not found in URL" }, { status: 400 });
@@ -53,9 +53,8 @@ export async function PATCH(request: NextRequest) {
 
     return NextResponse.json(updatedStudent);
   } catch (error: any) {
-    console.error("PATCH Error:", error);
     return NextResponse.json(
-      { message: "Failed to update student", error: error.message },
+      { message: "PATCH error", error: error.message },
       { status: 500 }
     );
   }
