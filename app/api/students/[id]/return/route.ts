@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-export async function PATCH(req: NextRequest, context: { params: { id: string } }) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const studentId = context.params.id;
+    const studentId = params.id;
 
     const updated = await prisma.student.update({
       where: { id: studentId },
