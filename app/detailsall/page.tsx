@@ -20,7 +20,7 @@ interface Student {
   photo: string;
 }
 
-export default function detailsAll() {
+export default function DetailsAll() {
   const [students, setStudents] = useState<Student[]>([]);
   const [filteredStudents, setFilteredStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(true);
