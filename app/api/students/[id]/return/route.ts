@@ -1,27 +1,22 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/db';
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } } 
-) {
-  const { id } = params;
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/db";
 
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const updatedStudent = await prisma.student.update({
-      where: { id },
+    const studentId = params.id;
+
+    const updated = await prisma.student.update({
+      where: { id: studentId },
       data: {
         returned: true,
-        comeinTime: new Date().toISOString(),
+        comeinTime: new Date(),
       },
     });
 
-    return NextResponse.json(updatedStudent, { status: 200 });
+    return NextResponse.json(updated);
   } catch (error) {
-    console.error('Error in PATCH /api/students/[id]/return:', error);
-    return NextResponse.json(
-      { error: 'Student not found or update failed' },
-      { status: 500 }
-    );
+    console.error("PATCH /students/[id]/return →", error);
+    return new NextResponse("Error updating return status", { status: 500 });
   }
 }
