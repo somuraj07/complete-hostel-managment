@@ -1,17 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-export async function PATCH(req: NextRequest) {
+export async function PATCH(request: NextRequest) {
   try {
-    const url = new URL(req.url);
-    const id = url.pathname.split("/").filter(Boolean).pop();
+    const url = new URL(request.url);
+    const studentId = url.pathname.split("/").pop(); // gets [id] from URL
 
-    if (!id) {
-      return new NextResponse("Student ID is missing in the URL", { status: 400 });
+    if (!studentId) {
+      return new NextResponse("Missing student ID", { status: 400 });
     }
 
     const updated = await prisma.student.update({
-      where: { id },
+      where: { id: studentId },
       data: {
         returned: true,
         comeinTime: new Date(),
@@ -20,7 +20,7 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json(updated);
   } catch (error) {
-    console.error("PATCH /api/students/[id]/return →", error);
+    console.error("PATCH /students/[id]/return →", error);
     return new NextResponse("Error updating return status", { status: 500 });
   }
 }
