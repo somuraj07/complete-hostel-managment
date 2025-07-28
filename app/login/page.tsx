@@ -22,6 +22,7 @@ export default function LoginPage() {
     } else {
       if (data.role === "warden") router.push("/warden");
       else if (data.role === "watchman") router.push("/watchman");
+      else if (data.role === "chairman") router.push("/detailsall");
     }
   };
 

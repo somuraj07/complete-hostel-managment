@@ -1,10 +1,11 @@
-import { prisma } from "@/lib/db";
-import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest) {
+import { NextResponse } from "next/server";
+import { prisma } from "@/lib/db"; 
+
+export async function POST(req: Request) {
   try {
-    const body = await request.json();
-   // create 
+    const body = await req.json();
+
     const newUser = await prisma.student.create({
       data: {
         name: body.name,
@@ -14,19 +15,24 @@ export async function POST(request: NextRequest) {
         village: body.village,
         phoneNumber: body.phoneNumber,
         days: body.days,
-        approvedBy: "Warden",
-        submit: body.submit,
-        returned: body.returned,
-        photo:body.photo,
+        approvedBy: "Warden", // default
+        submit: false,
+        returned: false,
+        photo: body.photo,
       },
     });
-
-    return NextResponse.json(newUser, { status: 201 });
-  } catch (error: any) {
-    console.error(" Error:", error);
-    return NextResponse.json({ message: "Internal Server Error", error: error.message }, { status: 500 });
+   console.log("Received data:", body);
+    console.log("New student created:", newUser);
+    return NextResponse.json(newUser, { status: 200 });
+  } catch (error) {
+    console.error("Error in POST /api/students/new:", error);
+    return NextResponse.json(
+      { message: "Failed to create student" },
+      { status: 500 }
+    );
   }
 }
+
 //rendering all the info of studenst of information
 export async function GET() {
   try {

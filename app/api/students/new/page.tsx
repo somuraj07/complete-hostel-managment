@@ -38,10 +38,20 @@ export default function StudentForm() {
     }
 
     try {
-      const res = await axios.post("/api/students/new", formData);
+      const res = await axios.post("/api/students", formData);
       if (res.status === 200) {
         toast.success("Outpass submitted!");
-        router.push("/profile");
+        setFormData({
+          name: "",
+          registerNo: "",
+          roomNumber: "",
+          reason: "",
+          village: "",
+          phoneNumber: "",
+          days: "",
+          photo: "",
+        });
+        
       }
     } catch (error) {
       toast.error("Error submitting form.");
