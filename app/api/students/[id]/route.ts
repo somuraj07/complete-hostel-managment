@@ -20,19 +20,14 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-// PATCH – For updating comeoutTime, comeinTime, returned etc.
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// PATCH – For updating comeoutTime, comeinTime, returned
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await request.json();
     const { comeoutTime, comeinTime, returned } = body;
 
     const updatedStudent = await prisma.student.update({
-      where: {
-        id: params.id,
-      },
+      where: { id: params.id },
       data: {
         ...(comeoutTime && { comeoutTime: new Date(comeoutTime) }),
         ...(comeinTime && { comeinTime: new Date(comeinTime) }),
