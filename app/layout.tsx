@@ -12,9 +12,13 @@ const inter = Inter({
 
 
 export const metadata: Metadata = {
-  title: "sanksrithi group of institutions",
-  description: "Developed by sankscrithi group of institutions",
+  title: "Sanskriti Group of Institutions",
+  description: "Developed by Sanskriti Group of Institutions",
+  icons: {
+    icon: "/Icon-03.png", 
+  },
 };
+
 
 export default function RootLayout({
   children,

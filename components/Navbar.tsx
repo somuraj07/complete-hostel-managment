@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Navbar = () => {
   const router = useRouter();
@@ -9,13 +10,19 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-[#f9843d] shadow-md">
-      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center">
+    <nav className="sticky top-0 z-50 bg-gradient-to-r from-[#fdba74] to-[#fb923c] shadow-md h-16">
+      <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-start">
         <button
           onClick={goHome}
-          className="text-2xl font-bold text-white hover:opacity-90 transition"
+          className="flex items-center hover:opacity-90 transition"
         >
-          SGI-Hostels
+          <Image
+            src="/LOGO-02.png"
+            alt="SGI Logo"
+            width={160}
+            height={60}
+            className="object-contain"
+          />
         </button>
       </div>
     </nav>

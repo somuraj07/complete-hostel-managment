@@ -12,11 +12,12 @@ interface Student {
   returned: boolean;
   comeoutTime: string | null;
   comeinTime: string | null;
-  photo: string; // From Prisma
+  photo: string;
 }
 
 export default function WatchmanPage() {
   const [students, setStudents] = useState<Student[]>([]);
+  const [outMarkedIds, setOutMarkedIds] = useState<Set<string>>(new Set());
 
   const fetchStudents = async () => {
     try {
@@ -39,8 +40,9 @@ export default function WatchmanPage() {
       await axios.patch(`/api/students/${id}`, {
         comeoutTime: new Date(),
       });
+
+      setOutMarkedIds((prev) => new Set(prev).add(id));
       toast.success("Come Out Time marked");
-      fetchStudents();
     } catch (error) {
       toast.error("Failed to mark Come Out Time");
     }
@@ -52,8 +54,9 @@ export default function WatchmanPage() {
         comeinTime: new Date(),
         returned: true,
       });
+
+      setStudents((prev) => prev.filter((s) => s.id !== id));
       toast.success("Student Returned");
-      fetchStudents();
     } catch (error) {
       toast.error("Failed to mark return");
     }
@@ -75,32 +78,50 @@ export default function WatchmanPage() {
             key={student.id}
             className="bg-white shadow-md rounded-2xl p-4 flex items-center gap-4"
           >
-            {/* Photo on left */}
             <img
               src={student.photo || "/default-profile.png"}
               alt={student.name}
               className="w-20 h-20 rounded-full object-cover border border-gray-300"
             />
 
-            {/* Info and Buttons in row */}
             <div className="flex flex-col flex-1">
               <div className="mb-2">
-                <p className="text-lg font-semibold text-[#872e0e]">{student.name}</p>
+                <p className="text-lg font-semibold text-[#872e0e]">
+                  {student.name}
+                </p>
                 <p className="text-gray-600 text-sm">{student.registerNo}</p>
               </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => handleOut(student.id)}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded text-sm"
-                >
-                  Out
-                </button>
-                <button
-                  onClick={() => handleReturn(student.id)}
-                  className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded text-sm"
-                >
-                  Return
-                </button>
+
+              <div className="flex gap-3">
+                {outMarkedIds.has(student.id) ? (
+                  <span className="text-red-700 font-semibold px-4 py-1 text-sm">
+                    Went
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => handleOut(student.id)}
+                    className="bg-red-600 hover:bg-red-400 text-white px-4 py-1 rounded text-sm"
+                  >
+                    Out
+                  </button>
+                )}
+
+                {outMarkedIds.has(student.id) ? (
+                  <button
+                    onClick={() => handleReturn(student.id)}
+                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded text-sm"
+                  >
+                    Return
+                  </button>
+                ) : (
+                  <button
+                    disabled
+                    className="bg-gray-300 text-gray-500 px-4 py-1 rounded text-sm cursor-not-allowed"
+                  >
+                    Return
+                  </button>
+                )}
+
               </div>
             </div>
           </div>

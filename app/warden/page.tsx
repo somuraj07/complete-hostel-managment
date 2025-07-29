@@ -16,6 +16,7 @@ type Student = {
   phoneNumber: string;
   submit: boolean;
   photo: string;
+  approvedBy?: string;
 };
 
 export default function WardenPage() {
@@ -24,6 +25,7 @@ export default function WardenPage() {
   const [loading, setLoading] = useState(true);
   const [highlightedId, setHighlightedId] = useState<string | null>(null);
   const [slideOpen, setSlideOpen] = useState(false);
+  const [selectedWarden, setSelectedWarden] = useState<Record<string, string>>({});
   const router = useRouter();
   const tableRef = useRef<HTMLTableElement>(null);
 
@@ -90,8 +92,17 @@ export default function WardenPage() {
   }, []);
 
   const handleSubmit = async (id: string) => {
+    const warden = selectedWarden[id];
+    if (!warden) {
+      toast.error("Please select a warden before submitting");
+      return;
+    }
+
     try {
-      await axios.put(`/api/students/${id}`, { submit: true });
+      await axios.put(`/api/students/${id}`, {
+        submit: true,
+        approvedBy: warden,
+      });
       toast.success("Permission Submitted");
       fetchStudents();
     } catch (err) {
@@ -108,7 +119,8 @@ export default function WardenPage() {
     }
   };
 
-  if (loading) return <div className="p-6 text-center text-black">Loading…</div>;
+  if (loading)
+    return <div className="p-6 text-center text-black">Loading…</div>;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-[#f9843d] flex flex-col items-center p-4 pt-6 text-black">
@@ -116,7 +128,6 @@ export default function WardenPage() {
       <div className="w-full flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold text-black">Warden Dashboard</h1>
         <div className="flex items-center gap-2">
-          {/* Red Notification Button */}
           <button
             onClick={() => setSlideOpen(!slideOpen)}
             className="relative text-white bg-red-600 hover:bg-red-700 p-2 rounded-full"
@@ -128,8 +139,6 @@ export default function WardenPage() {
               </span>
             )}
           </button>
-
-          {/* Green All Details Button */}
           <button
             onClick={detailsHandler}
             className="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-3 py-1.5 rounded-md"
@@ -139,7 +148,7 @@ export default function WardenPage() {
         </div>
       </div>
 
-      {/* Notification Slide Panel */}
+      {/* Slide Panel */}
       <div
         className={clsx(
           "fixed top-0 right-0 h-full w-72 bg-white text-black z-50 shadow-lg transition-transform duration-300 border-l border-gray-200",
@@ -148,10 +157,7 @@ export default function WardenPage() {
       >
         <div className="flex justify-between items-center p-4 border-b">
           <h2 className="text-md font-semibold text-red-600">Notifications</h2>
-          <button
-            onClick={() => setSlideOpen(false)}
-            className="text-sm text-gray-600"
-          >
+          <button onClick={() => setSlideOpen(false)} className="text-sm">
             Close
           </button>
         </div>
@@ -176,18 +182,19 @@ export default function WardenPage() {
         </div>
       </div>
 
-      {/* Table Section */}
+      {/* Table */}
       <div className="w-full overflow-x-auto mt-2">
         <table className="w-full text-sm border border-gray-200 rounded-xl overflow-hidden text-black">
           <thead className="bg-[#f9843d] text-white">
             <tr>
-              <th className="px-3 py-2">Photo</th>
-              <th className="px-3 py-2">Name</th>
-              <th className="px-3 py-2">Reg No</th>
-              <th className="px-3 py-2">Room</th>
-              <th className="px-3 py-2">Reason</th>
-              <th className="px-3 py-2">Phone</th>
-              <th className="px-3 py-2">Submit</th>
+              <th className="px-2 py-2">Photo</th>
+              <th className="px-2 py-2">Name</th>
+              <th className="px-2 py-2">Reg No</th>
+              <th className="px-2 py-2">Room</th>
+              <th className="px-2 py-2">Reason</th>
+              <th className="px-2 py-2">Phone</th>
+              <th className="px-2 py-2">Approved By</th>
+              <th className="px-2 py-2">Submit</th>
             </tr>
           </thead>
           <tbody>
@@ -219,6 +226,30 @@ export default function WardenPage() {
                 <td className="px-2 py-2">{s.phoneNumber}</td>
                 <td className="px-2 py-2">
                   {s.submit ? (
+                    <span className="text-sm font-medium text-green-700">
+                      {s.approvedBy || "N/A"}
+                    </span>
+                  ) : (
+                    <select
+                      className="text-sm border rounded px-2 py-1"
+                      value={selectedWarden[s.id] || ""}
+                      onChange={(e) =>
+                        setSelectedWarden({
+                          ...selectedWarden,
+                          [s.id]: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="">Select</option>
+                      <option value="Warden 1">Laxshmi</option>
+                      <option value="Warden 2">Swetha</option>
+                      <option value="Warden 3">Tulasi</option>
+                      <option value="Warden 4">Ramu PT</option>
+                    </select>
+                  )}
+                </td>
+                <td className="px-2 py-2">
+                  {s.submit ? (
                     <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs">
                       Submitted
                     </span>
@@ -235,7 +266,7 @@ export default function WardenPage() {
             ))}
             {students.length === 0 && (
               <tr>
-                <td colSpan={7} className="text-center text-gray-500 py-6 italic">
+                <td colSpan={8} className="text-center text-gray-500 py-6 italic">
                   No records
                 </td>
               </tr>
