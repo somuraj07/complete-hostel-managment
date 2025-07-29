@@ -12,8 +12,8 @@ const inter = Inter({
 
 
 export const metadata: Metadata = {
-  title: "Sanskriti Group of Institutions",
-  description: "Developed by Sanskriti Group of Institutions",
+  title: "Sanskrithi Group of Institutions",
+  description: "Developed by Sanskrithi Group of Institutions",
   icons: {
     icon: "/Icon-03.png", 
   },

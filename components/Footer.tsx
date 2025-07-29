@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-primary mb-4">
-          Sanskriti Group of Institutions
+          Sanskrithi Group of Institutions
           </h2>
           <p className="text-lg text-gray-800 max-w-3xl mx-auto">
             Empowering future engineers with knowledge, skills, and values since 2010.
@@ -101,7 +101,7 @@ const Footer: React.FC = () => {
             For any queries or information, please contact the respective departments.
           </p>
           <p className="text-sm text-gray-700">
-            © {new Date().getFullYear()} Sanskriti Group of Institutions. All rights reserved.
+            © {new Date().getFullYear()} Sanskrithi Group of Institutions. All rights reserved.
           </p>
         </div>
       </div>
