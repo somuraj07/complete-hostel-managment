@@ -6,8 +6,8 @@ export default function Home() {
   const router = useRouter();
 
   const studentHandler = () => router.push("/api/students/new");
-  const wardenHandler = () => router.push("/login");
-  const watchmenHandler = () => router.push("/login");
+  const wardenHandler = () => router.push("/admin/login");
+  const watchmenHandler = () => router.push("/admin/login");
   const AdminHandler = () => router.push("/allDetails");
 
   return (
