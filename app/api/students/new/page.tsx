@@ -1,4 +1,5 @@
 "use client";
+
 import { useRef, useState } from "react";
 import Webcam from "react-webcam";
 import toast from "react-hot-toast";
@@ -17,8 +18,7 @@ export default function StudentForm() {
     reason: "",
     village: "",
     phoneNumber: "",
-    days: "",
-    hours: "",
+    days: "", // stores something like "2 days" or "5 hours"
     photo: "",
   });
 
@@ -32,10 +32,7 @@ export default function StudentForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isEmpty = Object.entries(formData).some(
-      ([key, val]) =>
-        key !== "photo" && typeof val === "string" && val.trim() === ""
-    );
+    const isEmpty = Object.values(formData).some((val) => val.trim() === "");
     if (isEmpty) {
       toast.error("Please fill in all fields.");
       return;
@@ -53,10 +50,9 @@ export default function StudentForm() {
           village: "",
           phoneNumber: "",
           days: "",
-          hours: "",
           photo: "",
         });
-        setShowCamera(true);
+        router.refresh();
       }
     } catch (error) {
       toast.error("Error submitting form.");
@@ -146,32 +142,36 @@ export default function StudentForm() {
             </div>
           ))}
 
-          {/* Days and Hours input side by side */}
+          {/* Days or Hours Input */}
           <div>
-            <label className="block text-sm font-semibold mb-1">
-              Duration (Days & Hours)
-            </label>
-            <div className="flex space-x-2">
+            <label className="block text-sm font-semibold mb-1">Duration</label>
+            <div className="flex gap-2">
               <input
                 type="number"
-                name="days"
-                placeholder="Days"
-                value={formData.days}
+                min="1"
+                value={formData.days.split(" ")[0] || ""}
                 onChange={(e) =>
-                  setFormData({ ...formData, days: e.target.value })
+                  setFormData({
+                    ...formData,
+                    days: `${e.target.value} ${formData.days.split(" ")[1] || "days"}`,
+                  })
                 }
-                className="w-1/2 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f9843d]"
+                className="w-2/3 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f9843d]"
+                placeholder="Enter number"
               />
-              <input
-                type="number"
-                name="hours"
-                placeholder="Hours"
-                value={formData.hours}
+              <select
+                value={formData.days.split(" ")[1] || "days"}
                 onChange={(e) =>
-                  setFormData({ ...formData, hours: e.target.value })
+                  setFormData({
+                    ...formData,
+                    days: `${formData.days.split(" ")[0] || ""} ${e.target.value}`,
+                  })
                 }
-                className="w-1/2 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f9843d]"
-              />
+                className="w-1/3 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f9843d]"
+              >
+                <option value="days">Days</option>
+                <option value="hours">Hours</option>
+              </select>
             </div>
           </div>
         </div>
