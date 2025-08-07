@@ -17,7 +17,6 @@ interface Student {
 
 export default function WatchmanPage() {
   const [students, setStudents] = useState<Student[]>([]);
-  const [outMarkedIds, setOutMarkedIds] = useState<Set<string>>(new Set());
 
   const fetchStudents = async () => {
     try {
@@ -41,7 +40,8 @@ export default function WatchmanPage() {
         comeoutTime: new Date(),
       });
 
-      setOutMarkedIds((prev) => new Set(prev).add(id));
+      // Refresh data from server after marking out
+      fetchStudents();
       toast.success("Come Out Time marked");
     } catch (error) {
       toast.error("Failed to mark Come Out Time");
@@ -55,7 +55,8 @@ export default function WatchmanPage() {
         returned: true,
       });
 
-      setStudents((prev) => prev.filter((s) => s.id !== id));
+      // Refresh data from server after marking return
+      fetchStudents();
       toast.success("Student Returned");
     } catch (error) {
       toast.error("Failed to mark return");
@@ -93,7 +94,7 @@ export default function WatchmanPage() {
               </div>
 
               <div className="flex gap-3">
-                {outMarkedIds.has(student.id) ? (
+                {student.comeoutTime ? (
                   <span className="text-red-700 font-semibold px-4 py-1 text-sm">
                     Went
                   </span>
@@ -106,7 +107,7 @@ export default function WatchmanPage() {
                   </button>
                 )}
 
-                {outMarkedIds.has(student.id) ? (
+                {student.comeoutTime ? (
                   <button
                     onClick={() => handleReturn(student.id)}
                     className="bg-green-600 hover:bg-green-700 text-white px-4 py-1 rounded text-sm"
@@ -121,7 +122,6 @@ export default function WatchmanPage() {
                     Return
                   </button>
                 )}
-
               </div>
             </div>
           </div>

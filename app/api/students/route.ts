@@ -15,10 +15,10 @@ export async function POST(req: Request) {
         village: body.village,
         phoneNumber: body.phoneNumber,
         days: body.days,
-        approvedBy: "Warden", // default
         submit: false,
         returned: false,
         photo: body.photo,
+        approvedBy: null, // Initially null, can be updated later
       },
     });
    console.log("Received data:", body);

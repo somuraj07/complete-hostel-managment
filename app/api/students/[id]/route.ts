@@ -17,6 +17,7 @@ export async function PUT(request: NextRequest) {
       where: { id },
       data: {
         submit: body.submit,
+        approvedBy:body.approvedBy,
       },
     });
 

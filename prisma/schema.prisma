@@ -24,7 +24,7 @@ model Student {
   village     String
   phoneNumber String
   photo       String
-  approvedBy  String
+  approvedBy  String?
   submit      Boolean  @default(false)
   returned    Boolean  @default(false)
   comeoutTime DateTime @default(now())

@@ -18,6 +18,7 @@ export default function StudentForm() {
     village: "",
     phoneNumber: "",
     days: "",
+    hours: "",
     photo: "",
   });
 
@@ -31,7 +32,10 @@ export default function StudentForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const isEmpty = Object.values(formData).some((val) => val.trim() === "");
+    const isEmpty = Object.entries(formData).some(
+      ([key, val]) =>
+        key !== "photo" && typeof val === "string" && val.trim() === ""
+    );
     if (isEmpty) {
       toast.error("Please fill in all fields.");
       return;
@@ -49,9 +53,10 @@ export default function StudentForm() {
           village: "",
           phoneNumber: "",
           days: "",
+          hours: "",
           photo: "",
         });
-        
+        setShowCamera(true);
       }
     } catch (error) {
       toast.error("Error submitting form.");
@@ -124,7 +129,6 @@ export default function StudentForm() {
             { name: "reason", label: "Reason for Outpass" },
             { name: "village", label: "Home Village/Town" },
             { name: "phoneNumber", label: "Phone Number" },
-            { name: "days", label: "No. of Days" },
           ].map((field) => (
             <div key={field.name}>
               <label className="block text-sm font-semibold mb-1">
@@ -141,6 +145,35 @@ export default function StudentForm() {
               />
             </div>
           ))}
+
+          {/* Days and Hours input side by side */}
+          <div>
+            <label className="block text-sm font-semibold mb-1">
+              Duration (Days & Hours)
+            </label>
+            <div className="flex space-x-2">
+              <input
+                type="number"
+                name="days"
+                placeholder="Days"
+                value={formData.days}
+                onChange={(e) =>
+                  setFormData({ ...formData, days: e.target.value })
+                }
+                className="w-1/2 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f9843d]"
+              />
+              <input
+                type="number"
+                name="hours"
+                placeholder="Hours"
+                value={formData.hours}
+                onChange={(e) =>
+                  setFormData({ ...formData, hours: e.target.value })
+                }
+                className="w-1/2 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#f9843d]"
+              />
+            </div>
+          </div>
         </div>
 
         {/* Submit Button */}

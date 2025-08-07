@@ -33,7 +33,8 @@ export async function POST(request: Request) {
       {
         id: user.id,
         username: user.username,
-        role: user.role, 
+        role: user.role,
+        person:user.person,
       },
       JWT_SECRET!,
       { expiresIn: "1d" }

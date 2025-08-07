@@ -4,6 +4,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
+import { Lock, User } from 'lucide-react';
 
 export default function AdminLoginPage() {
   const [formData, setFormData] = useState({
@@ -23,8 +24,6 @@ export default function AdminLoginPage() {
     try {
       const res = await axios.post('/api/admin/login', formData);
       const { token, role } = res.data;
-
-      console.log('Role from backend:', role); 
 
       if (!role) {
         toast.error('No role returned from server');
@@ -49,33 +48,46 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Admin Login</h2>
+    <div className="min-h-screen flex items-center justify-center bg-orange-50">
+      <form
+        onSubmit={handleLogin}
+        className="bg-white p-10 rounded-xl shadow-lg w-full max-w-md border border-orange-200"
+      >
+        <h2 className="text-3xl font-bold mb-8 text-center text-orange-600">Admin Login</h2>
 
-        <input
-          type="text"
-          name="username"
-          placeholder="Username"
-          value={formData.username}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded mb-4"
-        />
+        <div className="mb-5">
+          <label className="flex items-center gap-2 text-sm text-orange-700 mb-1">
+            <User className="w-4 h-4" /> Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            placeholder="Enter your username"
+            value={formData.username}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border border-orange-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-          className="w-full px-4 py-2 border rounded mb-4"
-        />
+        <div className="mb-6">
+          <label className="flex items-center gap-2 text-sm text-orange-700 mb-1">
+            <Lock className="w-4 h-4" /> Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            placeholder="Enter your password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-2 border border-orange-300 rounded focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
 
         <button
           type="submit"
-          className="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+          className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded transition duration-200"
         >
           Login
         </button>

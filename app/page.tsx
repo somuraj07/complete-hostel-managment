@@ -8,7 +8,6 @@ export default function Home() {
   const studentHandler = () => router.push("/api/students/new");
   const wardenHandler = () => router.push("/admin/login");
   const watchmenHandler = () => router.push("/admin/login");
-  const AdminHandler = () => router.push("/allDetails");
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#4c1d0d] to-white p-4">
@@ -53,15 +52,7 @@ export default function Home() {
             <p className="text-xs font-light">Track student movements</p>
           </button>
 
-          {/* Admin Portal */}
-          <button
-            onClick={AdminHandler}
-            className="bg-[#4b5d72] hover:bg-[#3a4958] text-white rounded-xl px-4 py-4 flex flex-col items-center justify-center w-full shadow-md transition"
-          >
-            <Settings size={24} />
-            <p className="font-bold mt-2">Admin Portal</p>
-            <p className="text-xs font-light">View all records</p>
-          </button>
+          
         </div>
 
         <p className="text-xs text-gray-500 mt-6">Secure outpass management system</p>
