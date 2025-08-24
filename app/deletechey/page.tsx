@@ -127,24 +127,26 @@ export default function DetailsAll() {
   return (
     <div className="min-h-screen p-4 bg-gray-50">
       {/* Filters */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
         {/* Dates */}
-        <div className="flex gap-2 items-center">
+        <div className="flex flex-col sm:flex-row gap-2 items-center w-full md:w-auto">
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-2 py-1 border rounded text-black"
+            className="px-2 py-1 border rounded text-black w-full sm:w-auto"
           />
+            <span className="text-gray-700 font-medium">to</span>
+
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="px-2 py-1 border rounded text-black"
+            className="px-2 py-1 border rounded text-black w-full sm:w-auto"
           />
           <button
             onClick={handleDateFilter}
-            className="bg-blue-600 text-white px-3 py-1 rounded"
+            className="bg-blue-600 text-white px-3 py-1 rounded w-full sm:w-auto"
           >
             Filter
           </button>
@@ -156,13 +158,13 @@ export default function DetailsAll() {
           placeholder="Search Reg No..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="px-3 py-2 border rounded text-black flex-1"
+          className="px-3 py-2 border rounded text-black w-full md:flex-1"
         />
 
         {/* Delete */}
         <button
           onClick={handleDeleteSelected}
-          className="bg-red-600 text-white px-4 py-2 rounded"
+          className="bg-red-600 text-white px-4 py-2 rounded w-full md:w-auto"
         >
           Delete Selected
         </button>
